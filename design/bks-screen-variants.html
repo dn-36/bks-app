@@ -1,0 +1,718 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BKS screen design variants</title>
+  <style>
+    :root {
+      --red: #ff3209;
+      --ink: #0c1024;
+      --black: #050608;
+      --white: #ffffff;
+      --paper: #f6f7f9;
+      --line: #dde0e7;
+      --muted: #6b7280;
+      --soft-red: #fff0ec;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, Arial, sans-serif;
+      letter-spacing: 0;
+    }
+
+    .board {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 32px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 28px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 22px;
+    }
+
+    .brand img {
+      width: 54px;
+      height: 64px;
+      object-fit: contain;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 28px;
+      line-height: 1.1;
+      font-weight: 800;
+    }
+
+    .brand p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+      align-items: start;
+    }
+
+    .concept {
+      min-width: 0;
+    }
+
+    .concept > h2 {
+      margin: 0 0 10px;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .phone {
+      width: 300px;
+      min-height: 650px;
+      margin: 0 auto;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      box-shadow: 0 18px 48px rgba(12, 16, 36, 0.10);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .status {
+      height: 26px;
+      padding: 8px 18px 0;
+      display: flex;
+      justify-content: space-between;
+      color: var(--ink);
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .topbar {
+      min-height: 58px;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--white);
+    }
+
+    .topbar.dark {
+      background: var(--ink);
+      color: var(--white);
+      border-bottom-color: var(--ink);
+    }
+
+    .topbar .title {
+      flex: 1;
+      min-width: 0;
+      font-size: 17px;
+      font-weight: 800;
+      line-height: 1.15;
+    }
+
+    .logo-small {
+      width: 30px;
+      height: 36px;
+      object-fit: contain;
+      flex: none;
+    }
+
+    .icon {
+      width: 34px;
+      height: 34px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      color: var(--ink);
+      background: var(--white);
+      flex: none;
+    }
+
+    .dark .icon {
+      background: rgba(255,255,255,0.08);
+      color: var(--white);
+      border-color: rgba(255,255,255,0.18);
+    }
+
+    .content {
+      flex: 1;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .hero {
+      padding: 24px 16px;
+      border-bottom: 1px solid var(--line);
+      display: grid;
+      place-items: center;
+      gap: 18px;
+      text-align: center;
+      min-height: 300px;
+    }
+
+    .hero img {
+      width: 128px;
+      height: 154px;
+      object-fit: contain;
+    }
+
+    .hero h3 {
+      margin: 0;
+      font-size: 22px;
+      line-height: 1.1;
+      font-weight: 900;
+    }
+
+    .btn {
+      height: 46px;
+      border-radius: 8px;
+      border: 1px solid var(--red);
+      background: var(--red);
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .btn.secondary {
+      background: var(--white);
+      color: var(--ink);
+      border-color: var(--line);
+    }
+
+    .btn.dark {
+      background: var(--ink);
+      border-color: var(--ink);
+    }
+
+    .field {
+      height: 48px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      color: var(--muted);
+      font-size: 13px;
+      background: var(--white);
+    }
+
+    .search {
+      height: 42px;
+      border-radius: 8px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      font-size: 13px;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+      padding: 12px;
+    }
+
+    .card.accent {
+      border-left: 4px solid var(--red);
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .between {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .title-line {
+      font-size: 14px;
+      font-weight: 800;
+      line-height: 1.2;
+    }
+
+    .meta {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.3;
+    }
+
+    .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--red);
+      flex: none;
+    }
+
+    .badge {
+      min-width: 24px;
+      height: 24px;
+      padding: 0 8px;
+      border-radius: 999px;
+      background: var(--soft-red);
+      color: var(--red);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 900;
+      flex: none;
+    }
+
+    .tabs {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+
+    .tab {
+      height: 38px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      display: grid;
+      place-items: center;
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--muted);
+    }
+
+    .tab.active {
+      color: var(--white);
+      background: var(--ink);
+      border-color: var(--ink);
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .metric {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      min-height: 78px;
+    }
+
+    .metric b {
+      display: block;
+      font-size: 24px;
+      line-height: 1;
+    }
+
+    .metric span {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.25;
+    }
+
+    .bottom {
+      height: 68px;
+      border-top: 1px solid var(--line);
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      padding: 8px 8px 10px;
+      gap: 4px;
+      background: var(--white);
+    }
+
+    .navitem {
+      display: grid;
+      place-items: center;
+      gap: 4px;
+      color: var(--muted);
+      font-size: 9px;
+      font-weight: 700;
+    }
+
+    .navitem:before {
+      content: "";
+      width: 20px;
+      height: 20px;
+      border: 2px solid currentColor;
+      border-radius: 6px;
+    }
+
+    .navitem.active {
+      color: var(--red);
+    }
+
+    .calendar {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+    }
+
+    .day {
+      aspect-ratio: 1;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      display: grid;
+      place-items: center;
+      font-size: 10px;
+      color: var(--muted);
+    }
+
+    .day.active {
+      background: var(--red);
+      color: var(--white);
+      border-color: var(--red);
+      font-weight: 900;
+    }
+
+    .chat-bubble {
+      max-width: 82%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .chat-bubble.mine {
+      align-self: flex-end;
+      background: var(--ink);
+      color: var(--white);
+      border-color: var(--ink);
+    }
+
+    .timeline {
+      display: grid;
+      gap: 10px;
+    }
+
+    .timeline .card {
+      position: relative;
+      padding-left: 34px;
+    }
+
+    .timeline .card:before {
+      content: "";
+      position: absolute;
+      left: 13px;
+      top: 15px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--red);
+    }
+
+    @media (max-width: 760px) {
+      .board { padding: 18px; }
+      .phone { width: 100%; max-width: 320px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="board">
+    <header class="brand">
+      <img src="../logo/logoza-ru-hd.png" alt="">
+      <div>
+        <h1>BKS. Строгая минималистичная система экранов</h1>
+        <p>Палитра логотипа: красный акцент, белая рабочая поверхность, темный графит для навигации и текста.</p>
+      </div>
+    </header>
+
+    <section class="grid">
+      <article class="concept">
+        <h2>Splash</h2>
+        <div class="phone">
+          <div class="status"><span>9:41</span><span>●●●</span></div>
+          <div class="hero">
+            <img src="../logo/logoza-ru-hd.png" alt="">
+            <div>
+              <h3>БКС</h3>
+              <div class="meta">загрузка рабочего пространства</div>
+            </div>
+          </div>
+          <div class="content">
+            <div class="card accent"><div class="title-line">Проверка сессии</div><div class="meta">аккаунт, объект, уведомления</div></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="concept">
+        <h2>Auth start</h2>
+        <div class="phone">
+          <div class="status"><span>9:41</span><span>●●●</span></div>
+          <div class="hero">
+            <img src="../logo/logoza-ru-hd.png" alt="">
+            <div>
+              <h3>Рабочий доступ</h3>
+              <div class="meta">вход для сотрудников и подрядчиков</div>
+            </div>
+          </div>
+          <div class="content">
+            <div class="btn">Вход</div>
+            <div class="btn secondary">Регистрация</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="concept">
+        <h2>Login</h2>
+        <div class="phone">
+          <div class="status"><span>9:41</span><span>●●●</span></div>
+          <div class="topbar"><div class="icon">←</div><div class="title">Вход</div></div>
+          <div class="content">
+            <img class="logo-small" src="../logo/logoza-ru-hd.png" alt="">
+            <div class="field">Логин</div>
+            <div class="field">Пароль</div>
+            <div class="btn">Войти</div>
+            <div class="btn secondary">Регистрация</div>
+            <div class="meta">Восстановить доступ</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="concept">
+        <h2>Register</h2>
+        <div class="phone">
+          <div class="status"><span>9:41</span><span>●●●</span></div>
+          <div class="topbar"><div class="icon">←</div><div class="title">Регистрация</div></div>
+          <div class="content">
+            <div class="field">Имя</div>
+            <div class="field">Фамилия</div>
+            <div class="field">Почта</div>
+            <div class="field">Пароль</div>
+            <div class="field">Статус</div>
+            <div class="btn">Зарегистрироваться</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="concept">
+        <h2>Objects</h2>
+        <div class="phone">
+          <div class="status"><span>9:41</span><span>●●●</span></div>
+          <div class="topbar dark"><img class="logo-small" src="../logo/logoza-ru-hd.png" alt=""><div class="title">Объекты</div><div class="icon">+</div></div>
+          <div class="content">
+            <div class="search">Поиск объекта</div>
+            <div class="card accent"><div class="between"><div><div class="title-line">ЖК Северный</div><div class="meta">ул. Строителей, 18</div></div><span class="badge">12</span></div></div>
+            <div class="card"><div class="title-line">Бизнес-центр Восток</div><div class="meta">активные заявки: 4</div></div>
+            <div class="card"><div class="title-line">Складской комплекс</div><div class="meta">бригада на объекте</div></div>
+          </div>
+          <nav class="bottom"><div class="navitem">Главная</div><div class="navitem active">Объекты</div><div class="navitem">Профиль</div><div class="navitem">Чаты</div><div class="navitem">Заявки</div></nav>
+        </div>
+      </article>
+
+      <article class="concept">
+        <h2>Home</h2>
+        <div class="phone">
+          <div class="status"><span>9:41</span><span>●●●</span></div>
+          <div class="topbar dark"><img class="logo-small" src="../logo/logoza-ru-hd.png" alt=""><div class="title">ЖК Северный</div><div class="icon">⌕</div></div>
+          <div class="content">
+            <div class="metric-grid">
+              <div class="metric"><b>8</b><span>задач сегодня</span></div>
+              <div class="metric"><b>3</b><span>заявки требуют ответа</span></div>
+              <div class="metric"><b>14</b><span>материалов в работе</span></div>
+              <div class="metric"><b>2</b><span>новых сообщения</span></div>
+            </div>
+            <div class="card accent"><div class="title-line">Смена 08:00-20:00</div><div class="meta">проверить отчет до конца дня</div></div>
+            <div class="btn dark">Открыть рабочую панель</div>
+          </div>
+          <nav class="bottom"><div class="navitem active">Главная</div><div class="navitem">Объекты</div><div class="navitem">Профиль</div><div class="navitem">Чаты</div><div class="navitem">Заявки</div></nav>
+        </div>
+      </article>
+
+      <article class="concept">
+        <h2>Projects</h2>
+        <div class="phone">
+          <div class="status"><span>9:41</span><span>●●●</span></div>
+          <div class="topbar"><div class="title">Проекты</div><div class="icon">+</div></div>
+          <div class="content">
+            <div class="search">Поиск проекта</div>
+            <div class="card accent"><div class="title-line">Корпус А. Монолит</div><div class="meta">PDF, чертежи, спецификации</div></div>
+            <div class="card"><div class="title-line">Вентиляция паркинга</div><div class="meta">обновлено сегодня</div></div>
+            <div class="card"><div class="title-line">Фасадные узлы</div><div class="meta">3 документа</div></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="concept">
+        <h2>PDF viewer</h2>
+        <div class="phone">
+          <div class="status"><span>9:41</span><span>●●●</span></div>
+          <div class="topbar"><div class="icon">←</div><div class="title">Корпус А</div><div class="icon">⋯</div></div>
+          <div class="content">
+            <div class="card" style="height:430px;background:linear-gradient(#fff,#fff),repeating-linear-gradient(0deg,#f2f3f5 0 18px,#fff 18px 36px);">
+              <div class="badge">PDF</div>
+              <div style="margin-top:80px;border-top:3px solid var(--red);padding-top:14px;">
+                <div class="title-line">План 3 этажа</div>
+                <div class="meta">масштаб 1:100</div>
+              </div>
+            </div>
+            <div class="between"><div class="btn secondary" style="width:80px;">−</div><div class="meta">стр. 12 / 48</div><div class="btn secondary" style="width:80px;">+</div></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="concept">
+        <h2>Requests menu</h2>
+        <div class="phone">
+          <div class="status"><span>9:41</span><span>●●●</span></div>
+          <div class="topbar dark"><div class="title">Заявки</div><div class="icon">⌕</div></div>
+          <div class="content">
+            <div class="card accent"><div class="title-line">Создать заявку на материалы</div><div class="meta">форма отправки поставщику</div></div>
+            <div class="card"><div class="title-line">История заявок</div><div class="meta">отправленные и черновики</div></div>
+            <div class="card"><div class="title-line">Спецификации</div><div class="meta">номенклатура и остатки</div></div>
+          </div>
+          <nav class="bottom"><div class="navitem">Главная</div><div class="navitem">Объекты</div><div class="navitem">Профиль</div><div class="navitem">Чаты</div><div class="navitem active">Заявки</div></nav>
+        </div>
+      </article>
+
+      <article class="concept">
+        <h2>Create request</h2>
+        <div class="phone">
+          <div class="status"><span>9:41</span><span>●●●</span></div>
+          <div class="topbar"><div class="icon">←</div><div class="title">Материалы</div></div>
+          <div class="content">
+            <div class="field">Email получателя</div>
+            <div class="card accent"><div class="between"><div><div class="title-line">Бетон М300</div><div class="meta">12 м3 · остаток 4</div></div><span class="badge">!</span></div></div>
+            <div class="card"><div class="title-line">Арматура 12 мм</div><div class="meta">240 м.п.</div></div>
+            <div class="btn secondary">Добавить материал</div>
+            <div class="btn">Отправить заявку</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="concept">
+        <h2>Chats</h2>
+        <div class="phone">
+          <div class="status"><span>9:41</span><span>●●●</span></div>
+          <div class="topbar dark"><div class="title">Чаты</div><div class="icon">+</div></div>
+          <div class="content">
+            <div class="search">Поиск диалога</div>
+            <div class="card accent"><div class="between"><div><div class="title-line">Прораб · Корпус А</div><div class="meta">Нужно согласовать доставку</div></div><span class="badge">3</span></div></div>
+            <div class="card"><div class="title-line">Снабжение</div><div class="meta">заявка принята</div></div>
+            <div class="card"><div class="title-line">Группа объекта</div><div class="meta">12 участников</div></div>
+          </div>
+          <nav class="bottom"><div class="navitem">Главная</div><div class="navitem">Объекты</div><div class="navitem">Профиль</div><div class="navitem active">Чаты</div><div class="navitem">Заявки</div></nav>
+        </div>
+      </article>
+
+      <article class="concept">
+        <h2>Chat detail</h2>
+        <div class="phone">
+          <div class="status"><span>9:41</span><span>●●●</span></div>
+          <div class="topbar dark"><div class="icon">←</div><div class="title">Прораб</div><div class="icon">⋯</div></div>
+          <div class="content">
+            <div class="chat-bubble">Проверьте поставку на завтра.</div>
+            <div class="chat-bubble mine">Принял. Нужна спецификация по арматуре.</div>
+            <div class="chat-bubble">Отправил файл в заявку.</div>
+          </div>
+          <div style="padding:10px;border-top:1px solid var(--line);display:flex;gap:8px;">
+            <div class="icon">+</div><div class="field" style="flex:1;height:40px;">Сообщение</div><div class="icon" style="background:var(--red);color:var(--white);border-color:var(--red);">→</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="concept">
+        <h2>Schedule</h2>
+        <div class="phone">
+          <div class="status"><span>9:41</span><span>●●●</span></div>
+          <div class="topbar"><div class="title">График</div><div class="icon">+</div></div>
+          <div class="content">
+            <div class="between"><div class="title-line">Май 2026</div><span class="badge">24</span></div>
+            <div class="calendar">
+              <div class="day">П</div><div class="day">В</div><div class="day">С</div><div class="day">Ч</div><div class="day">П</div><div class="day">С</div><div class="day">В</div>
+              <div class="day">18</div><div class="day">19</div><div class="day">20</div><div class="day">21</div><div class="day">22</div><div class="day">23</div><div class="day active">24</div>
+              <div class="day">25</div><div class="day">26</div><div class="day">27</div><div class="day">28</div><div class="day">29</div><div class="day">30</div><div class="day">31</div>
+            </div>
+            <div class="timeline">
+              <div class="card"><div class="title-line">08:00 Монтаж</div><div class="meta">секция 2, этаж 5</div></div>
+              <div class="card"><div class="title-line">14:00 Приемка</div><div class="meta">проверка качества</div></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="concept">
+        <h2>Shift report</h2>
+        <div class="phone">
+          <div class="status"><span>9:41</span><span>●●●</span></div>
+          <div class="topbar"><div class="title">Смена</div><div class="icon">+</div></div>
+          <div class="content">
+            <div class="tabs"><div class="tab active">Бланк</div><div class="tab">Отчеты</div></div>
+            <div class="card accent"><div class="title-line">Что выполнено?</div><div class="meta">описать ответ</div></div>
+            <div class="card"><div class="title-line">Материалы использованы</div><div class="meta">выбрать вариант</div></div>
+            <div class="field">Ответ</div>
+            <div class="btn">Сохранить отчет</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="concept">
+        <h2>Users admin</h2>
+        <div class="phone">
+          <div class="status"><span>9:41</span><span>●●●</span></div>
+          <div class="topbar dark"><div class="title">Пользователи</div><div class="icon">↻</div></div>
+          <div class="content">
+            <div class="search">Поиск пользователя</div>
+            <div class="card accent"><div class="title-line">Иван Петров</div><div class="meta">ожидает доступ</div><div class="between" style="margin-top:10px;"><span class="badge">Доступ</span><span class="badge">Отказать</span></div></div>
+            <div class="card"><div class="title-line">Анна Смирнова</div><div class="meta">активна · прораб</div></div>
+            <div class="card"><div class="title-line">Олег Соколов</div><div class="meta">заблокирован</div></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="concept">
+        <h2>Profile</h2>
+        <div class="phone">
+          <div class="status"><span>9:41</span><span>●●●</span></div>
+          <div class="topbar"><div class="title">Профиль</div><div class="icon">⚙</div></div>
+          <div class="content">
+            <div class="card accent">
+              <div class="row"><span class="badge">ИП</span><div><div class="title-line">Иван Петров</div><div class="meta">прораб · ACTIVE</div></div></div>
+            </div>
+            <div class="field">Имя</div>
+            <div class="field">Фамилия</div>
+            <div class="field">Почта</div>
+            <div class="field">Статус</div>
+            <div class="btn">Сохранить</div>
+            <div class="btn secondary">Выйти из аккаунта</div>
+          </div>
+          <nav class="bottom"><div class="navitem">Главная</div><div class="navitem">Объекты</div><div class="navitem active">Профиль</div><div class="navitem">Чаты</div><div class="navitem">Заявки</div></nav>
+        </div>
+      </article>
+    </section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,125 @@
+{
+  "project_info": {
+    "project_number": "104100215056",
+    "firebase_url": "https://testguardapp-default-rtdb.firebaseio.com",
+    "project_id": "testguardapp",
+    "storage_bucket": "testguardapp.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:104100215056:android:96ed1c1e071a16243bcd95",
+        "android_client_info": {
+          "package_name": "com.bkc"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB984B8wL6a3D6MAJwvDnQfnwd5FE0KwgQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:104100215056:android:de30b52bd435d50c3bcd95",
+        "android_client_info": {
+          "package_name": "com.pedro.streamer"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB984B8wL6a3D6MAJwvDnQfnwd5FE0KwgQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:104100215056:android:f87254922cb222a03bcd95",
+        "android_client_info": {
+          "package_name": "com.project.guardapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB984B8wL6a3D6MAJwvDnQfnwd5FE0KwgQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:104100215056:android:dbeb6a9cb36a9e833bcd95",
+        "android_client_info": {
+          "package_name": "com.tsd_store.intercom_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB984B8wL6a3D6MAJwvDnQfnwd5FE0KwgQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:104100215056:android:e53bf7dc793c09943bcd95",
+        "android_client_info": {
+          "package_name": "org.example.project"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB984B8wL6a3D6MAJwvDnQfnwd5FE0KwgQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:104100215056:android:c47511d82bdf29cf3bcd95",
+        "android_client_info": {
+          "package_name": "org.tsd_store.intercom_mobile_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB984B8wL6a3D6MAJwvDnQfnwd5FE0KwgQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

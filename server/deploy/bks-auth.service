@@ -1,0 +1,14 @@
+[Unit]
+Description=BKS Auth API
+After=network.target
+
+[Service]
+User=ubuntu
+WorkingDirectory=/opt/bks-app
+EnvironmentFile=/etc/bks-app.env
+ExecStart=/opt/bks-app/server/bin/server
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
