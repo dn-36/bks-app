@@ -21,7 +21,6 @@ import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -41,7 +40,7 @@ class ServerScheduleRepository(
             })
         }
     }
-    private val scope = CoroutineScope(Dispatchers.IO)
+    private val scope = CoroutineScope(Dispatchers.Default)
     private val tasks = MutableStateFlow<List<ScheduleTask>>(emptyList())
 
     override fun observeTasks(): Flow<List<ScheduleTask>> {

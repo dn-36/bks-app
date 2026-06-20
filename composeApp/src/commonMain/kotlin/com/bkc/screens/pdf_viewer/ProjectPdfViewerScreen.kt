@@ -1,5 +1,6 @@
 package com.bkc.screens.pdf_viewer
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -40,10 +41,13 @@ class ProjectPdfViewerScreen(
                 )
             }
         ) { padding ->
-            PdfViewer(
-                url = pdfUrl,
-
-            )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+            ) {
+                PdfViewer(url = pdfUrl)
+            }
         }
     }
 }

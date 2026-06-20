@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -111,83 +112,90 @@ class  UserLoginScreen(
 
                 Spacer(Modifier.Companion.height(20.dp))
 
-                OutlinedTextField(
-                    value = state.login,
-                    onValueChange = { viewModel.process(UserLoginIntent.LoginChanged(it)) },
-                    label = { Text("Логин") },
-                    singleLine = true,
-                    modifier = Modifier.Companion.fillMaxWidth()
-                )
-
-                Spacer(Modifier.Companion.height(12.dp))
-
-                OutlinedTextField(
-                    value = state.password,
-                    onValueChange = { viewModel.process(UserLoginIntent.PasswordChanged(it)) },
-                    label = { Text("Пароль") },
-                    singleLine = true,
-                    visualTransformation = if (passwordVisible) {
-                        VisualTransformation.None
-                    } else {
-                        PasswordVisualTransformation()
-                    },
-                    trailingIcon = {
-                        IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                            Icon(
-                                imageVector = if (passwordVisible) Icons.Default.VisibilityOff else Icons.Default.Visibility,
-                                contentDescription = if (passwordVisible) "Скрыть пароль" else "Показать пароль"
-                            )
-                        }
-                    },
-                    modifier = Modifier.Companion.fillMaxWidth()
-                )
-
-                Spacer(Modifier.Companion.height(16.dp))
-
-                Button(
-                    onClick = { viewModel.process(UserLoginIntent.Submit) },
-                    enabled = !state.isLoading,
-                    modifier = Modifier.Companion.fillMaxWidth()
+                Column(
+                    modifier = Modifier
+                        .widthIn(max = 420.dp)
+                        .fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    if (state.isLoading) {
-                        CircularProgressIndicator(
-                            strokeWidth = 2.dp,
-                            modifier = Modifier.Companion.size(18.dp)
-                        )
-                        Spacer(Modifier.Companion.width(10.dp))
-                    }
-                    Text("Войти")
-                }
+                    OutlinedTextField(
+                        value = state.login,
+                        onValueChange = { viewModel.process(UserLoginIntent.LoginChanged(it)) },
+                        label = { Text("Логин") },
+                        singleLine = true,
+                        modifier = Modifier.Companion.fillMaxWidth()
+                    )
 
-                Spacer(Modifier.Companion.height(12.dp))
+                    Spacer(Modifier.Companion.height(12.dp))
 
-                TextButton(
-                    onClick = {
-                        navigator?.push(
-                            RegisterScreen(
-                                viewModel = RegisterViewModel(getKoin().get(), getKoin().get()),
-                                onBack = { navigator.pop() },
-                                onRegistered = {
-                                    navigator.replaceAll(ObjectsScreen(openMainOnSelect = true))
-                                }
+                    OutlinedTextField(
+                        value = state.password,
+                        onValueChange = { viewModel.process(UserLoginIntent.PasswordChanged(it)) },
+                        label = { Text("Пароль") },
+                        singleLine = true,
+                        visualTransformation = if (passwordVisible) {
+                            VisualTransformation.None
+                        } else {
+                            PasswordVisualTransformation()
+                        },
+                        trailingIcon = {
+                            IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                                Icon(
+                                    imageVector = if (passwordVisible) Icons.Default.VisibilityOff else Icons.Default.Visibility,
+                                    contentDescription = if (passwordVisible) "Скрыть пароль" else "Показать пароль"
+                                )
+                            }
+                        },
+                        modifier = Modifier.Companion.fillMaxWidth()
+                    )
+
+                    Spacer(Modifier.Companion.height(16.dp))
+
+                    Button(
+                        onClick = { viewModel.process(UserLoginIntent.Submit) },
+                        enabled = !state.isLoading,
+                        modifier = Modifier.Companion.fillMaxWidth()
+                    ) {
+                        if (state.isLoading) {
+                            CircularProgressIndicator(
+                                strokeWidth = 2.dp,
+                                modifier = Modifier.Companion.size(18.dp)
                             )
-                        )
-                    },
-                    enabled = !state.isLoading
-                ) { Text("Регистрация") }
+                            Spacer(Modifier.Companion.width(10.dp))
+                        }
+                        Text("Войти")
+                    }
 
-                TextButton(
-                    onClick = { viewModel.process(UserLoginIntent.RecoverAccess) },
-                    enabled = !state.isLoading
-                ) { Text("Восстановить доступ") }
+                    Spacer(Modifier.Companion.height(12.dp))
 
-                state.error?.let {
-                    Spacer(Modifier.Companion.height(12.dp))
-                    Text(it, color = MaterialTheme.colorScheme.error)
-                }
-                state.message?.let {
-                    Spacer(Modifier.Companion.height(12.dp))
-                    Text(it, color = MaterialTheme.colorScheme.primary)
+                    TextButton(
+                        onClick = {
+                            navigator?.push(
+                                RegisterScreen(
+                                    viewModel = RegisterViewModel(getKoin().get(), getKoin().get()),
+                                    onBack = { navigator.pop() },
+                                    onRegistered = {
+                                        navigator.replaceAll(ObjectsScreen(openMainOnSelect = true))
+                                    }
+                                )
+                            )
+                        },
+                        enabled = !state.isLoading
+                    ) { Text("Регистрация") }
+
+                    TextButton(
+                        onClick = { viewModel.process(UserLoginIntent.RecoverAccess) },
+                        enabled = !state.isLoading
+                    ) { Text("Восстановить доступ") }
+
+                    state.error?.let {
+                        Spacer(Modifier.Companion.height(12.dp))
+                        Text(it, color = MaterialTheme.colorScheme.error)
+                    }
+                    state.message?.let {
+                        Spacer(Modifier.Companion.height(12.dp))
+                        Text(it, color = MaterialTheme.colorScheme.primary)
+                    }
                 }
             }
         }

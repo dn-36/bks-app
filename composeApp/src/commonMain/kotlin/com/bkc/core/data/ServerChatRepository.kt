@@ -34,7 +34,6 @@ import io.ktor.websocket.Frame
 import io.ktor.websocket.readText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -62,7 +61,7 @@ class ServerChatRepository(
         }
         install(WebSockets)
     }
-    private val scope = CoroutineScope(Dispatchers.IO)
+    private val scope = CoroutineScope(Dispatchers.Default)
     private val chats = MutableStateFlow<List<Chat>>(emptyList())
     private val unreadChatCounts = MutableStateFlow<Map<String, Int>>(emptyMap())
     private val messageFlows = mutableMapOf<String, MutableStateFlow<List<ChatMessage>>>()

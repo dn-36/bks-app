@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -113,21 +114,29 @@ class AuthStartScreen : Screen {
                 )
                 Spacer(Modifier.height(32.dp))
 
-                Button(
-                    onClick = { viewModel.process(AuthStartIntent.ClickLogin) },
-                    modifier = Modifier.fillMaxWidth(),
-                    enabled = !state.isLoading
+                Column(
+                    modifier = Modifier
+                        .widthIn(max = 420.dp)
+                        .fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text("Вход")
-                }
+                    Button(
+                        onClick = { viewModel.process(AuthStartIntent.ClickLogin) },
+                        modifier = Modifier.fillMaxWidth(),
+                        enabled = !state.isLoading
+                    ) {
+                        Text("Вход")
+                    }
 
 
-                OutlinedButton(
-                    onClick = { viewModel.process(AuthStartIntent.ClickRegister) },
-                    modifier = Modifier.fillMaxWidth(),
-                    enabled = !state.isLoading
-                ) {
-                    Text("Регистрация")
+                    OutlinedButton(
+                        onClick = { viewModel.process(AuthStartIntent.ClickRegister) },
+                        modifier = Modifier.fillMaxWidth(),
+                        enabled = !state.isLoading
+                    ) {
+                        Text("Регистрация")
+                    }
                 }
             }
         }

@@ -4,7 +4,10 @@ import android.graphics.Bitmap
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,12 +31,12 @@ actual fun PdfViewer(url: String) {
 
     var loading by remember { mutableStateOf(true) }
     var error by remember { mutableStateOf<String?>(null) }
-    var bitmap by remember { mutableStateOf<Bitmap?>(null) }
+    var pages by remember { mutableStateOf<List<Bitmap>>(emptyList()) }
 
     LaunchedEffect(url) {
         loading = true
         error = null
-        bitmap = null
+        pages = emptyList()
 
         try {
             println("PDF SOURCE = $url")
@@ -42,11 +45,9 @@ actual fun PdfViewer(url: String) {
                 downloadToCache(context, url)
             }
 
-            val rendered = withContext(Dispatchers.IO) {
-                renderAndroidPdfFirstPage(file)
+            pages = withContext(Dispatchers.IO) {
+                renderAndroidPdfPages(file)
             }
-
-            bitmap = rendered
         } catch (t: Throwable) {
             t.printStackTrace()
             error = t.message ?: t.toString()
@@ -64,12 +65,22 @@ actual fun PdfViewer(url: String) {
         when {
             loading -> CircularProgressIndicator()
             error != null -> Text("PDF error: $error")
-            bitmap != null -> Image(
-                bitmap = bitmap!!.asImageBitmap(),
-                contentDescription = null,
+            pages.isNotEmpty() -> LazyColumn(
                 modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Fit
-            )
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                itemsIndexed(pages) { index, page ->
+                    Image(
+                        bitmap = page.asImageBitmap(),
+                        contentDescription = "Страница ${index + 1}",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 12.dp),
+                        contentScale = ContentScale.FillWidth
+                    )
+                }
+            }
+            else -> Text("PDF error: пустой документ")
         }
     }
 }

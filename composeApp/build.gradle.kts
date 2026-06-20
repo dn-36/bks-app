@@ -1,4 +1,7 @@
+@file:Suppress("DEPRECATION")
+
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 
@@ -27,6 +30,17 @@ kotlin {
     }
 
     jvm()
+
+    @OptIn(ExperimentalWasmDsl::class)
+    wasmJs {
+        outputModuleName.set("composeApp")
+        browser {
+            commonWebpackConfig {
+                outputFileName = "composeApp.js"
+            }
+        }
+        binaries.executable()
+    }
 
     listOf(
         iosArm64(),
@@ -64,10 +78,10 @@ kotlin {
             implementation("io.ktor:ktor-client-websockets:3.0.0")
             implementation("io.ktor:ktor-serialization-kotlinx-json:3.0.0")
 
-            implementation("cafe.adriel.voyager:voyager-navigator:1.0.0")
-            implementation("cafe.adriel.voyager:voyager-tab-navigator:1.0.0")
-            implementation("cafe.adriel.voyager:voyager-screenmodel:1.1.0-beta02")
-            implementation("cafe.adriel.voyager:voyager-koin:1.1.0-beta02")
+            implementation("cafe.adriel.voyager:voyager-navigator:2.2.21-1.10.3")
+            implementation("cafe.adriel.voyager:voyager-tab-navigator:2.2.21-1.10.3")
+            implementation("cafe.adriel.voyager:voyager-screenmodel:2.2.21-1.10.3")
+            implementation("cafe.adriel.voyager:voyager-koin:2.2.21-1.10.3")
 
             implementation("org.jetbrains.compose.material:material-icons-extended:1.6.11")
         }
@@ -101,6 +115,10 @@ kotlin {
 
         iosMain.dependencies {
             implementation("io.ktor:ktor-client-darwin:3.0.0")
+        }
+
+        wasmJsMain.dependencies {
+            implementation("io.ktor:ktor-client-js:3.0.0")
         }
 
         commonTest.dependencies {

@@ -292,10 +292,15 @@ private fun ProjectEditorDialog(
     var pickFile by remember { mutableStateOf(false) }
 
     if (pickFile) {
-        ProjectFilePicker { fileName, bytes ->
-            pickFile = false
-            onFilePicked(fileName, bytes)
-        }
+        ProjectFilePicker(
+            onDismiss = {
+                pickFile = false
+            },
+            onPicked = { fileName, bytes ->
+                pickFile = false
+                onFilePicked(fileName, bytes)
+            }
+        )
     }
 
     AlertDialog(

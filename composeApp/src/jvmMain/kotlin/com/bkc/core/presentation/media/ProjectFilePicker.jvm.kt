@@ -2,18 +2,19 @@ package com.bkc.core.presentation.media
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import java.io.File
 import javax.swing.JFileChooser
 import javax.swing.filechooser.FileNameExtensionFilter
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.swing.Swing
 import kotlinx.coroutines.withContext
 
 @Composable
 actual fun ProjectFilePicker(
+    onDismiss: () -> Unit,
     onPicked: (fileName: String, bytes: ByteArray) -> Unit
 ) {
     LaunchedEffect(Unit) {
-        val result = withContext(Dispatchers.IO) {
+        val selectedFile = withContext(Dispatchers.Swing) {
             val chooser = JFileChooser().apply {
                 dialogTitle = "Выберите файл проекта"
                 fileFilter = FileNameExtensionFilter(
@@ -25,13 +26,19 @@ actual fun ProjectFilePicker(
 
             val approve = chooser.showOpenDialog(null)
             if (approve == JFileChooser.APPROVE_OPTION) {
-                val file: File = chooser.selectedFile
-                file.name to file.readBytes()
+                chooser.selectedFile
             } else {
                 null
             }
         }
 
-        result?.let { (name, bytes) -> onPicked(name, bytes) }
+        if (selectedFile != null) {
+            val result = withContext(Dispatchers.IO) {
+                selectedFile.name to selectedFile.readBytes()
+            }
+            onPicked(result.first, result.second)
+        } else {
+            onDismiss()
+        }
     }
 }

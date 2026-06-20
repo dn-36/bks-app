@@ -217,7 +217,11 @@ class ChatScreen(
         }
 
         if (pickFile) {
-            ProjectFilePicker { fileName, bytes ->
+            ProjectFilePicker(
+                onDismiss = {
+                    pickFile = false
+                }
+            ) { fileName, bytes ->
                 pendingAttachments = pendingAttachments + PendingChatAttachment(fileName, mimeTypeForFile(fileName), bytes)
                 pickFile = false
             }

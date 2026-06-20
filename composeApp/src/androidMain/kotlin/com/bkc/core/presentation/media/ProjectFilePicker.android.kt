@@ -15,6 +15,7 @@ import kotlinx.coroutines.withContext
 
 @Composable
 actual fun ProjectFilePicker(
+    onDismiss: () -> Unit,
     onPicked: (fileName: String, bytes: ByteArray) -> Unit
 ) {
     val context = LocalContext.current
@@ -24,8 +25,15 @@ actual fun ProjectFilePicker(
     ) { uri: Uri? ->
         if (uri != null) {
             scope.launch {
-                readFileFromUri(context, uri)?.let { onPicked(it.first, it.second) }
+                val file = readFileFromUri(context, uri)
+                if (file != null) {
+                    onPicked(file.first, file.second)
+                } else {
+                    onDismiss()
+                }
             }
+        } else {
+            onDismiss()
         }
     }
 

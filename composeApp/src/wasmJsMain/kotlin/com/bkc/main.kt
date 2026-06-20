@@ -1,0 +1,15 @@
+package com.bkc
+
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.window.ComposeViewport
+import com.bkc.core.app.initKoin
+import com.bkc.core.presentation.AppRoot
+import kotlinx.browser.document
+
+@OptIn(ExperimentalComposeUiApi::class)
+fun main() {
+    initKoin()
+    ComposeViewport(document.body!!) {
+        AppRoot().Component()
+    }
+}

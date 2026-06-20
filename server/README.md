@@ -16,12 +16,14 @@ Default port: `8080`.
 - `BKS_DB_PATH` - SQLite database path, defaults to `build/bks-app.db`.
 - `BKS_FILES_DIR` - uploaded project files directory, defaults to `build/project-files`.
 - `BKS_JWT_SECRET` - token signing secret.
+- `BKS_DEV_LOGIN_ENABLED` - enables test-only admin login when set to `true`.
 
 ## API
 
 - `GET /health`
 - `POST /auth/register`
 - `POST /auth/login`
+- `POST /auth/dev-login` test-only admin login, requires `BKS_DEV_LOGIN_ENABLED=true`
 - `POST /auth/recover`
 - `GET /auth/me` with `Authorization: Bearer <token>`
 - `PUT /auth/me` with `Authorization: Bearer <token>`

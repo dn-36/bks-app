@@ -16,12 +16,13 @@ import platform.posix.memcpy
 
 @Composable
 actual fun ProjectFilePicker(
+    onDismiss: () -> Unit,
     onPicked: (fileName: String, bytes: ByteArray) -> Unit
 ) {
     val viewController = LocalUIViewController.current
 
     DisposableEffect(Unit) {
-        val delegate = ProjectDocumentPickerDelegate(onPicked)
+        val delegate = ProjectDocumentPickerDelegate(onPicked, onDismiss)
         val picker = UIDocumentPickerViewController(
             forOpeningContentTypes = listOf(UTTypeItem),
             asCopy = true
@@ -34,7 +35,8 @@ actual fun ProjectFilePicker(
 }
 
 private class ProjectDocumentPickerDelegate(
-    private val onPicked: (fileName: String, bytes: ByteArray) -> Unit
+    private val onPicked: (fileName: String, bytes: ByteArray) -> Unit,
+    private val onDismiss: () -> Unit
 ) : NSObject(), UIDocumentPickerDelegateProtocol {
 
     override fun documentPicker(
@@ -45,6 +47,10 @@ private class ProjectDocumentPickerDelegate(
         val fileName = url.lastPathComponent ?: "project-file"
         val data = NSData.dataWithContentsOfURL(url) ?: return
         onPicked(fileName, data.toByteArray())
+    }
+
+    override fun documentPickerWasCancelled(controller: UIDocumentPickerViewController) {
+        onDismiss()
     }
 }
 

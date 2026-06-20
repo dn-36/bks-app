@@ -50,7 +50,6 @@ import com.bkc.screens.splash.ui.SplashScreen
 import com.bkc.screens.user_panel_screen.UserPanelScreen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
 import org.koin.mp.KoinPlatform.getKoin
 
@@ -58,7 +57,7 @@ class AppRoot {
    private var savedUserData : MutableState<SavedUser?> = mutableStateOf(null)
 
     init {
-        CoroutineScope(Dispatchers.IO).launch {
+        CoroutineScope(Dispatchers.Default).launch {
             savedUserData.value = (getKoin().get() as UserSessionStore).getUserOrNull()
         }
     }
@@ -77,25 +76,27 @@ class AppRoot {
                 startScreen = if (user != null) {
                     val sessionStore = getKoin().get<UserSessionStore>()
                     val activeUser = runCatching { getKoin().get<AccountRepository>().loadMe() }.getOrNull()
-                    if (activeUser == null || activeUser.accountStatus != "ACTIVE") {
+                    if (activeUser != null && activeUser.accountStatus != "ACTIVE") {
                         sessionStore.clear()
                         SplashScreen(AuthStartScreen())
                     } else {
-                        sessionStore.saveUser(
-                            user.copy(
-                                firstName = activeUser.firstName,
-                                lastName = activeUser.lastName,
-                                nickname = activeUser.nickname,
-                                avatarUrl = activeUser.avatarUrl,
-                                bio = activeUser.bio,
-                                phone = activeUser.phone,
-                                accountStatus = activeUser.accountStatus,
-                                blockedReason = activeUser.blockedReason,
-                                privacyProfileVisible = activeUser.privacyProfileVisible,
-                                notificationsEnabled = activeUser.notificationsEnabled,
-                                createdAt = activeUser.createdAt
+                        if (activeUser != null) {
+                            sessionStore.saveUser(
+                                user.copy(
+                                    firstName = activeUser.firstName,
+                                    lastName = activeUser.lastName,
+                                    nickname = activeUser.nickname,
+                                    avatarUrl = activeUser.avatarUrl,
+                                    bio = activeUser.bio,
+                                    phone = activeUser.phone,
+                                    accountStatus = activeUser.accountStatus,
+                                    blockedReason = activeUser.blockedReason,
+                                    privacyProfileVisible = activeUser.privacyProfileVisible,
+                                    notificationsEnabled = activeUser.notificationsEnabled,
+                                    createdAt = activeUser.createdAt
+                                )
                             )
-                        )
+                        }
                         AppNotifications.requestPermissionIfNeeded()
                         getKoin().get<ChatRepository>().startRealtime()
                         getKoin().get<AppStateStore>().selectObject(
