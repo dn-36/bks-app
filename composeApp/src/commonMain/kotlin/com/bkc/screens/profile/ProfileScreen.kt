@@ -109,7 +109,9 @@ class ProfileScreen : Screen {
         }
 
         if (pickAvatar) {
-            ImageFilePicker { fileName, bytes ->
+            ImageFilePicker(
+                onDismiss = { pickAvatar = false }
+            ) { fileName, bytes ->
                 avatarFileName = fileName
                 avatarBytes = bytes
                 pickAvatar = false

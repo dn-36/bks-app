@@ -370,7 +370,9 @@ private fun CreateGroupChatDialog(
     }
 
     if (pickPhoto) {
-        ImageFilePicker { fileName, bytes ->
+        ImageFilePicker(
+            onDismiss = { pickPhoto = false }
+        ) { fileName, bytes ->
             photoFileName = fileName
             photoBytes = bytes
             pickPhoto = false

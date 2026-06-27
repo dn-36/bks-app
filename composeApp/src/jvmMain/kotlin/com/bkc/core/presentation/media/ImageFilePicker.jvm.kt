@@ -14,6 +14,7 @@ import org.jetbrains.skia.Image
 
 @Composable
 actual fun ImageFilePicker(
+    onDismiss: () -> Unit,
     onPicked: (fileName: String, bytes: ByteArray) -> Unit
 ) {
     LaunchedEffect(Unit) {
@@ -33,7 +34,7 @@ actual fun ImageFilePicker(
             }
         }
 
-        result?.let { (name, bytes) -> onPicked(name, bytes) }
+        result?.let { (name, bytes) -> onPicked(name, bytes) } ?: onDismiss()
     }
 }
 

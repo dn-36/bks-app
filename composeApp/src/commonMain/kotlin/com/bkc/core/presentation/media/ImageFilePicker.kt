@@ -5,6 +5,7 @@ import androidx.compose.ui.graphics.ImageBitmap
 
 @Composable
 expect fun ImageFilePicker(
+    onDismiss: () -> Unit = {},
     onPicked: (fileName: String, bytes: ByteArray) -> Unit
 )
 

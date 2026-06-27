@@ -1,7 +1,10 @@
 package com.bkc.core.app
 
 import com.russhwolf.settings.Settings
+import kotlinx.browser.document
 import kotlinx.browser.window
+import kotlin.io.encoding.Base64
+import kotlin.io.encoding.ExperimentalEncodingApi
 import org.koin.core.context.startKoin
 
 actual object SettingsProvider {
@@ -31,6 +34,11 @@ private class LocalStorageSettings(
                     add(key.removePrefix(prefix))
                 }
             }
+            cookieEntries().keys.forEach { key ->
+                if (key.startsWith(prefix)) {
+                    add(key.removePrefix(prefix))
+                }
+            }
         }
 
     override val size: Int
@@ -42,12 +50,13 @@ private class LocalStorageSettings(
 
     override fun remove(key: String) {
         storage.removeItem(storageKey(key))
+        removeCookie(storageKey(key))
     }
 
-    override fun hasKey(key: String): Boolean = storage.getItem(storageKey(key)) != null
+    override fun hasKey(key: String): Boolean = getStoredString(key) != null
 
     override fun putInt(key: String, value: Int) {
-        storage.setItem(storageKey(key), value.toString())
+        putStoredString(key, value.toString())
     }
 
     override fun getInt(key: String, defaultValue: Int): Int =
@@ -57,7 +66,7 @@ private class LocalStorageSettings(
         storage.getItem(storageKey(key))?.toIntOrNull()
 
     override fun putLong(key: String, value: Long) {
-        storage.setItem(storageKey(key), value.toString())
+        putStoredString(key, value.toString())
     }
 
     override fun getLong(key: String, defaultValue: Long): Long =
@@ -67,17 +76,17 @@ private class LocalStorageSettings(
         storage.getItem(storageKey(key))?.toLongOrNull()
 
     override fun putString(key: String, value: String) {
-        storage.setItem(storageKey(key), value)
+        putStoredString(key, value)
     }
 
     override fun getString(key: String, defaultValue: String): String =
         getStringOrNull(key) ?: defaultValue
 
     override fun getStringOrNull(key: String): String? =
-        storage.getItem(storageKey(key))
+        getStoredString(key)
 
     override fun putFloat(key: String, value: Float) {
-        storage.setItem(storageKey(key), value.toString())
+        putStoredString(key, value.toString())
     }
 
     override fun getFloat(key: String, defaultValue: Float): Float =
@@ -87,7 +96,7 @@ private class LocalStorageSettings(
         storage.getItem(storageKey(key))?.toFloatOrNull()
 
     override fun putDouble(key: String, value: Double) {
-        storage.setItem(storageKey(key), value.toString())
+        putStoredString(key, value.toString())
     }
 
     override fun getDouble(key: String, defaultValue: Double): Double =
@@ -97,7 +106,7 @@ private class LocalStorageSettings(
         storage.getItem(storageKey(key))?.toDoubleOrNull()
 
     override fun putBoolean(key: String, value: Boolean) {
-        storage.setItem(storageKey(key), value.toString())
+        putStoredString(key, value.toString())
     }
 
     override fun getBoolean(key: String, defaultValue: Boolean): Boolean =
@@ -106,5 +115,49 @@ private class LocalStorageSettings(
     override fun getBooleanOrNull(key: String): Boolean? =
         storage.getItem(storageKey(key))?.toBooleanStrictOrNull()
 
+    private fun putStoredString(key: String, value: String) {
+        val fullKey = storageKey(key)
+        storage.setItem(fullKey, value)
+        putCookie(fullKey, value)
+    }
+
+    private fun getStoredString(key: String): String? {
+        val fullKey = storageKey(key)
+        storage.getItem(fullKey)?.let { return it }
+        return getCookie(fullKey)?.also { storage.setItem(fullKey, it) }
+    }
+
     private fun storageKey(key: String): String = "$prefix$key"
+
+    private fun putCookie(key: String, value: String) {
+        document.cookie = "$key=${value.toCookieValue()}; Max-Age=15552000; Path=/; SameSite=Lax"
+    }
+
+    private fun getCookie(key: String): String? =
+        cookieEntries()[key]?.fromCookieValueOrNull()
+
+    private fun removeCookie(key: String) {
+        document.cookie = "$key=; Max-Age=0; Path=/; SameSite=Lax"
+    }
+
+    private fun cookieEntries(): Map<String, String> {
+        val raw = document.cookie
+        if (raw.isBlank()) return emptyMap()
+        return raw.split(";")
+            .mapNotNull { entry ->
+                val trimmed = entry.trim()
+                val separator = trimmed.indexOf("=")
+                if (separator <= 0) return@mapNotNull null
+                trimmed.substring(0, separator) to trimmed.substring(separator + 1)
+            }
+            .toMap()
+    }
+
+    @OptIn(ExperimentalEncodingApi::class)
+    private fun String.toCookieValue(): String =
+        Base64.UrlSafe.encode(encodeToByteArray())
+
+    @OptIn(ExperimentalEncodingApi::class)
+    private fun String.fromCookieValueOrNull(): String? =
+        runCatching { Base64.UrlSafe.decode(this).decodeToString() }.getOrNull()
 }

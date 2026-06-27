@@ -22,12 +22,13 @@ import platform.posix.memcpy
 
 @Composable
 actual fun ImageFilePicker(
+    onDismiss: () -> Unit,
     onPicked: (fileName: String, bytes: ByteArray) -> Unit
 ) {
     val viewController = LocalUIViewController.current
 
     DisposableEffect(Unit) {
-        val delegate = ImagePickerDelegate(onPicked)
+        val delegate = ImagePickerDelegate(onDismiss, onPicked)
         val configuration = PHPickerConfiguration().apply {
             filter = PHPickerFilter.imagesFilter()
             selectionLimit = 1
@@ -65,14 +66,21 @@ private fun NSData.toByteArray(): ByteArray {
 }
 
 private class ImagePickerDelegate(
+    private val onDismiss: () -> Unit,
     private val onPicked: (fileName: String, bytes: ByteArray) -> Unit
 ) : NSObject(), PHPickerViewControllerDelegateProtocol {
     override fun picker(picker: PHPickerViewController, didFinishPicking: List<*>) {
         picker.dismissViewControllerAnimated(true, completion = null)
-        val result = didFinishPicking.firstOrNull() as? PHPickerResult ?: return
+        val result = didFinishPicking.firstOrNull() as? PHPickerResult ?: run {
+            onDismiss()
+            return
+        }
         val provider = result.itemProvider
         provider.loadDataRepresentationForTypeIdentifier("public.image") { data, _ ->
-            val bytes = data?.toByteArray() ?: return@loadDataRepresentationForTypeIdentifier
+            val bytes = data?.toByteArray() ?: run {
+                onDismiss()
+                return@loadDataRepresentationForTypeIdentifier
+            }
             onPicked("object.jpg", bytes)
         }
     }

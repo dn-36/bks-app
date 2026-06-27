@@ -68,20 +68,18 @@ class ProjectsScreen : Screen {
 
 
 
-        if (openPicker) {
-            PdfFilePicker { fileName, bytes ->
-                openPicker = false
-                viewModel.process(
-                    ProjectsIntent.AddProject(
-                        title = fileName,
-                        fileName = fileName,
-                        file = bytes
-                    )
-                )
-            }
-        }
-
         val state = viewModel.state
+        fun addProject(fileName: String, bytes: ByteArray) {
+            openPicker = false
+            viewModel.process(
+                ProjectsIntent.AddProject(
+                    title = fileName,
+                    fileName = fileName,
+                    file = bytes
+                )
+            )
+        }
+        val openDirectProjectPicker = DirectProjectFileInput(::addProject)
 
         Scaffold(
             topBar = {
@@ -105,7 +103,11 @@ class ProjectsScreen : Screen {
             },
             floatingActionButton = {
                 FloatingActionButton(
-                    onClick = { openPicker = true }
+                    onClick = {
+                        openDirectProjectPicker?.invoke() ?: run {
+                            openPicker = true
+                        }
+                    }
                 ) {
                     Text("+")
                 }
@@ -147,6 +149,24 @@ class ProjectsScreen : Screen {
                     }
                 }
             }
+        }
+
+        if (openPicker) {
+            AlertDialog(
+                onDismissRequest = { openPicker = false },
+                title = { Text("Добавить проект") },
+                text = {
+                    PdfFilePicker { fileName, bytes ->
+                        addProject(fileName, bytes)
+                    }
+                },
+                confirmButton = {},
+                dismissButton = {
+                    TextButton(onClick = { openPicker = false }) {
+                        Text("Отмена")
+                    }
+                }
+            )
         }
     }
 }

@@ -88,7 +88,6 @@ import com.bkc.core.presentation.components.EmptyState
 import com.bkc.core.presentation.components.LoadingState
 import com.bkc.core.presentation.media.AppVideoPlayer
 import com.bkc.core.presentation.media.ImageFilePicker
-import com.bkc.core.presentation.media.ProjectFilePicker
 import com.bkc.core.presentation.media.decodeImageBitmap
 import com.bkc.core.presentation.media.loadImageBitmap
 import com.bkc.core.presentation.navigation.BottomBarVisibilityStore
@@ -138,8 +137,6 @@ class ChatScreen(
         var mediaPreview by remember { mutableStateOf<MediaPreviewState?>(null) }
         var editText by remember { mutableStateOf("") }
         var showAttachmentPicker by remember { mutableStateOf(false) }
-        var pickImage by remember { mutableStateOf(false) }
-        var pickFile by remember { mutableStateOf(false) }
         var showGroupSettings by remember { mutableStateOf(false) }
 
         DisposableEffect(Unit) {
@@ -209,22 +206,8 @@ class ChatScreen(
             loadMessages()
         }
 
-        if (pickImage) {
-            ImageFilePicker { fileName, bytes ->
-                pendingAttachments = pendingAttachments + PendingChatAttachment(fileName, mimeTypeForFile(fileName), bytes)
-                pickImage = false
-            }
-        }
-
-        if (pickFile) {
-            ProjectFilePicker(
-                onDismiss = {
-                    pickFile = false
-                }
-            ) { fileName, bytes ->
-                pendingAttachments = pendingAttachments + PendingChatAttachment(fileName, mimeTypeForFile(fileName), bytes)
-                pickFile = false
-            }
+        val openDirectAttachmentPicker = DirectChatAttachmentInput { fileName, bytes ->
+            pendingAttachments = pendingAttachments + PendingChatAttachment(fileName, mimeTypeForFile(fileName), bytes)
         }
 
         LaunchedEffect(visibleMessages.lastOrNull()?.id, visibleMessages.lastOrNull()?.updatedAtMillis, visibleMessages.size) {
@@ -290,7 +273,13 @@ class ChatScreen(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
-                            IconButton(onClick = { showAttachmentPicker = true }) {
+                            IconButton(
+                                onClick = {
+                                    openDirectAttachmentPicker?.invoke() ?: run {
+                                        showAttachmentPicker = true
+                                    }
+                                }
+                            ) {
                                 Icon(Icons.Default.AttachFile, contentDescription = "Добавить файл")
                             }
                             OutlinedTextField(
@@ -381,39 +370,12 @@ class ChatScreen(
         }
 
         if (showAttachmentPicker) {
-            AlertDialog(
-                onDismissRequest = { showAttachmentPicker = false },
-                title = { Text("Добавить вложение") },
-                text = {
-                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Button(
-                            onClick = {
-                                showAttachmentPicker = false
-                                pickImage = true
-                            },
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Icon(Icons.Default.Image, contentDescription = null)
-                            Text("Фото")
-                        }
-                        Button(
-                            onClick = {
-                                showAttachmentPicker = false
-                                pickFile = true
-                            },
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Icon(Icons.Default.InsertDriveFile, contentDescription = null)
-                            Text("Видео или файл")
-                        }
-                    }
-                },
-                confirmButton = {
-                    TextButton(onClick = { showAttachmentPicker = false }) {
-                        Text("Отмена")
-                    }
-                }
-            )
+            AttachmentPickerDialog(
+                onDismiss = { showAttachmentPicker = false }
+            ) { fileName, bytes ->
+                pendingAttachments = pendingAttachments + PendingChatAttachment(fileName, mimeTypeForFile(fileName), bytes)
+                showAttachmentPicker = false
+            }
         }
 
         if (showGroupSettings && chat != null) {
@@ -1320,7 +1282,9 @@ private fun GroupSettingsDialog(
     }
 
     if (pickPhoto) {
-        ImageFilePicker { fileName, bytes ->
+        ImageFilePicker(
+            onDismiss = { pickPhoto = false }
+        ) { fileName, bytes ->
             photoFileName = fileName
             photoBytes = bytes
             pickPhoto = false

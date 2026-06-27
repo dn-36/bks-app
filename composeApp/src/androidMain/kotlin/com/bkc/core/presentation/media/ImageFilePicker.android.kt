@@ -19,6 +19,7 @@ import kotlinx.coroutines.withContext
 
 @Composable
 actual fun ImageFilePicker(
+    onDismiss: () -> Unit,
     onPicked: (fileName: String, bytes: ByteArray) -> Unit
 ) {
     val context = LocalContext.current
@@ -28,8 +29,10 @@ actual fun ImageFilePicker(
     ) { uri: Uri? ->
         if (uri != null) {
             scope.launch {
-                readImageFromUri(context, uri)?.let { onPicked(it.first, it.second) }
+                readImageFromUri(context, uri)?.let { onPicked(it.first, it.second) } ?: onDismiss()
             }
+        } else {
+            onDismiss()
         }
     }
 

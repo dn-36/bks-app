@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Article
@@ -30,6 +31,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -68,6 +70,7 @@ import com.bkc.core.presentation.mvi.UiListState
 import com.bkc.screens.objects.ObjectsScreen
 import com.bkc.screens.pdf_viewer.ProjectPdfViewerScreen
 import com.bkc.screens.pdf_viewer.renderPdfFirstPage
+import com.bkc.screens.projects.ui.DirectProjectFileInput
 import org.koin.mp.KoinPlatform.getKoin
 
 class ProjectsUserScreen(
@@ -78,6 +81,7 @@ class ProjectsUserScreen(
         val vm = getScreenModel<ProjectsUserScreenModel>()
         val navigator = LocalNavigator.current
         val state by vm.state.collectAsState()
+        val listState = rememberLazyListState()
 
         val appStateStore = getKoin().get<AppStateStore>()
         val appState by appStateStore.state.collectAsState()
@@ -136,8 +140,14 @@ class ProjectsUserScreen(
                     is UiListState.Empty -> EmptyState(ls.message)
                     is UiListState.Error -> EmptyState(ls.message)
                     is UiListState.Content -> {
+                        LaunchedEffect(ls.items.firstOrNull()?.id, ls.items.size) {
+                            if (ls.items.isNotEmpty()) {
+                                listState.animateScrollToItem(0)
+                            }
+                        }
                         LazyColumn(
                             modifier = Modifier.fillMaxSize(),
+                            state = listState,
                             contentPadding = PaddingValues(16.dp),
                             verticalArrangement = Arrangement.spacedBy(12.dp)
                         ) {
@@ -290,6 +300,10 @@ private fun ProjectEditorDialog(
     onSave: () -> Unit
 ) {
     var pickFile by remember { mutableStateOf(false) }
+    val openDirectProjectPicker = DirectProjectFileInput { fileName, bytes ->
+        pickFile = false
+        onFilePicked(fileName, bytes)
+    }
 
     if (pickFile) {
         ProjectFilePicker(
@@ -304,19 +318,27 @@ private fun ProjectEditorDialog(
     }
 
     AlertDialog(
-        onDismissRequest = onDismiss,
+        onDismissRequest = {
+            if (!editor.isSaving) onDismiss()
+        },
         title = { Text("Добавить проект") },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 OutlinedTextField(
                     value = editor.title,
                     onValueChange = onTitleChange,
+                    enabled = !editor.isSaving,
                     label = { Text("Название проекта") },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )
                 OutlinedButton(
-                    onClick = { pickFile = true },
+                    onClick = {
+                        openDirectProjectPicker?.invoke() ?: run {
+                            pickFile = true
+                        }
+                    },
+                    enabled = !editor.isSaving,
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Icon(Icons.Default.Description, contentDescription = null)
@@ -326,12 +348,26 @@ private fun ProjectEditorDialog(
             }
         },
         confirmButton = {
-            Button(onClick = onSave) {
-                Text("Сохранить")
+            Button(
+                onClick = onSave,
+                enabled = !editor.isSaving
+            ) {
+                if (editor.isSaving) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(18.dp),
+                        strokeWidth = 2.dp,
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
+                } else {
+                    Text("Сохранить")
+                }
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) {
+            TextButton(
+                onClick = onDismiss,
+                enabled = !editor.isSaving
+            ) {
                 Text("Отмена")
             }
         }

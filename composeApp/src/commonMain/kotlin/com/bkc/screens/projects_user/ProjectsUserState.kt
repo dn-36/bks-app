@@ -24,7 +24,8 @@ data class ProjectsUserState(
 data class ProjectEditorState(
     val title: String = "",
     val fileName: String? = null,
-    val fileBytes: ByteArray? = null
+    val fileBytes: ByteArray? = null,
+    val isSaving: Boolean = false
 )
 
 sealed interface ProjectsUserIntent {
@@ -119,6 +120,7 @@ class ProjectsUserScreenModel :
 
     private fun saveProject() {
         val editor = state.value.editor ?: return
+        if (editor.isSaving) return
         val title = editor.title.trim()
         val fileName = editor.fileName
         val fileBytes = editor.fileBytes
@@ -127,13 +129,21 @@ class ProjectsUserScreenModel :
             return
         }
 
+        setState { current ->
+            current.copy(editor = current.editor?.copy(isSaving = true), error = null)
+        }
         screenModelScope.launch {
             runCatching {
                 projectsRepository.addProject(title, fileName, fileBytes)
             }.onSuccess {
                 setState { it.copy(editor = null, error = null) }
             }.onFailure { e ->
-                setState { it.copy(error = e.message ?: "Ошибка сохранения проекта") }
+                setState { current ->
+                    current.copy(
+                        editor = current.editor?.copy(isSaving = false),
+                        error = e.message ?: "Ошибка сохранения проекта"
+                    )
+                }
             }
         }
     }

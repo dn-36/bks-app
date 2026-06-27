@@ -248,7 +248,9 @@ private fun ObjectEditorDialog(
     var pickPhoto by remember { mutableStateOf(false) }
 
     if (pickPhoto) {
-        ImageFilePicker { fileName, bytes ->
+        ImageFilePicker(
+            onDismiss = { pickPhoto = false }
+        ) { fileName, bytes ->
             pickPhoto = false
             onPhotoPicked(fileName, bytes)
         }

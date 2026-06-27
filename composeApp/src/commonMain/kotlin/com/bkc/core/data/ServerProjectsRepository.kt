@@ -64,7 +64,11 @@ class ServerProjectsRepository(
         }
 
         response.requireSuccess()
-        refreshProjects()
+        runCatching { response.body<ProjectDto>().toDomain() }
+            .onSuccess { created ->
+                projects.value = (projects.value.filterNot { it.id == created.id } + created)
+            }
+        runCatching { refreshProjects() }
     }
 
     override suspend fun deleteProject(project: Project) {
