@@ -6,6 +6,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
+import androidx.compose.ui.res.painterResource
 import com.bkc.core.app.initKoin
 import com.bkc.core.presentation.AppRoot
 import com.bkc.core.presentation.notifications.AppNotifications
@@ -23,6 +24,7 @@ fun main() {
         Window(
             onCloseRequest = { visible = false },
             title = "BKS APP",
+            icon = painterResource("app-icon.png"),
             visible = visible
         ) {
             AppRoot().Component()

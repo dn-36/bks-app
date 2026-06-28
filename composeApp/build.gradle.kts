@@ -172,8 +172,18 @@ compose.desktop {
                 TargetFormat.Msi,
                 TargetFormat.Deb
             )
-            packageName = "com.bkc"
+            packageName = "BKS APP"
             packageVersion = "1.0.0"
+
+            macOS {
+                iconFile.set(project.file("src/jvmMain/resources/desktop-icons/app.icns"))
+                bundleID = "com.bkc.app"
+            }
+
+            windows {
+                iconFile.set(project.file("src/jvmMain/resources/desktop-icons/app.ico"))
+                menuGroup = "BKS APP"
+            }
         }
     }
 }
